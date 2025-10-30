@@ -45,6 +45,11 @@
             .nav-links a {
                 padding: 0.5rem 0;
             }
+
+            /* Ensure nav-actions appear nicely on small screens */
+            .nav-actions {
+                gap: 8px;
+            }
         }
         * {
             margin: 0;
@@ -69,7 +74,7 @@
             padding: 0 20px;
         }
 
-        /* Language Toggle + Video button area (top-right) */
+        /* Language Toggle (top-right toolbar) */
         .language-toggle {
             position: fixed;
             top: 20px;
@@ -105,8 +110,15 @@
             background: #E8D5C4;
         }
 
-        /* Video button (styled to match language buttons) */
-        .video-btn {
+        /* Header-right actions (contains Video button now) */
+        .nav-actions {
+            margin-left: auto; /* push to right */
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-actions .video-btn {
             display: inline-block;
             background: none;
             border: 1px solid transparent;
@@ -119,7 +131,7 @@
             transition: all 0.2s ease;
         }
 
-        .video-btn:hover {
+        .nav-actions .video-btn:hover {
             background: #E8D5C4;
         }
 
@@ -140,9 +152,10 @@
         nav {
             padding: 0.5rem 0;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
             min-height: 60px;
+            gap: 16px;
         }
 
         .logo {
@@ -612,37 +625,44 @@
         <div class="loader"></div>
     </div>
 
-    <!-- Top-right language toggle + Video button -->
-    <div class="language-toggle" role="toolbar" aria-label="Language and Video">
-        <button onclick="switchLanguage('en')" id="en-btn" class="active">EN</button>
-        <button onclick="switchLanguage('pt')" id="pt-btn">PT</button>
-        <!-- Video link opens the video page in a new tab -->
-        <a id="video-btn" class="video-btn" href="second-page.html" target="_blank" rel="noopener">Video</a>
+    <!-- Top-right language toggle (Video button moved into header actions) -->
+    <div class="language-toggle" role="toolbar" aria-label="Language selection">
+        <button onclick="switchLanguage('en')" id="en-btn" class="active" aria-pressed="true">EN</button>
+        <button onclick="switchLanguage('pt')" id="pt-btn" aria-pressed="false">PT</button>
     </div>
 
     <header>
-        <nav class="container">
+        <nav class="container" role="navigation" aria-label="Main navigation">
             <div class="logo">
                 <img src="./AmailLogo.jpeg" alt="Amai Studio Logo" style="height: 200px;">
             </div>
-            <div class="hamburger" onclick="toggleMenu()">
+
+            <div class="hamburger" onclick="toggleMenu()" aria-hidden="true" aria-label="Open menu">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
-            <div class="lang-content active" data-lang="en">
+
+            <div class="lang-content active" data-lang="en" aria-hidden="false">
                 <ul class="nav-links">
                     <li><a href="#home">Home</a></li>
                     <li><a href="#products">Products</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
             </div>
-            <div class="lang-content" data-lang="pt">
+
+            <div class="lang-content" data-lang="pt" aria-hidden="true">
                 <ul class="nav-links">
                     <li><a href="#home">Início</a></li>
                     <li><a href="#products">Produtos</a></li>
                     <li><a href="#contact">Contacto</a></li>
                 </ul>
+            </div>
+
+            <!-- Right-side header actions (top-right) -->
+            <div class="nav-actions" aria-hidden="false">
+                <!-- Video link opens the video page in a new tab -->
+                <a id="video-btn" class="video-btn" href="second-page.html" target="_blank" rel="noopener">Video</a>
             </div>
         </nav>
     </header>
@@ -930,12 +950,26 @@
         window.addEventListener('load', function () {
             const loading = document.getElementById('loading');
             setTimeout(() => {
-                loading.classList.add('fade-out');
+                if (loading) loading.classList.add('fade-out');
             }, 1000);
         });
 
-        // Language switching
+        // Language switching (robust: targets only elements with data-lang)
         let currentLang = 'en';
+
+        function setLanguageVisibility(lang) {
+            // Toggle visible language sections and aria-hidden
+            document.querySelectorAll('.lang-content[data-lang]').forEach(content => {
+                const contentLang = content.getAttribute('data-lang');
+                if (contentLang === lang) {
+                    content.classList.add('active');
+                    content.setAttribute('aria-hidden', 'false');
+                } else {
+                    content.classList.remove('active');
+                    content.setAttribute('aria-hidden', 'true');
+                }
+            });
+        }
 
         function switchLanguage(lang) {
             currentLang = lang;
@@ -943,30 +977,29 @@
             // Update button states
             document.querySelectorAll('.language-toggle button').forEach(btn => {
                 btn.classList.remove('active');
+                btn.setAttribute('aria-pressed', 'false');
             });
             const btn = document.getElementById(lang + '-btn');
-            if (btn) btn.classList.add('active');
+            if (btn) {
+                btn.classList.add('active');
+                btn.setAttribute('aria-pressed', 'true');
+            }
 
-            // Update content
-            document.querySelectorAll('.lang-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            document.querySelectorAll(`[data-lang="${lang}"]`).forEach(content => {
-                content.classList.add('active');
-            });
+            // Update visible content (only elements that have data-lang)
+            setLanguageVisibility(lang);
 
             // Update the video button label to match language
             const videoBtn = document.getElementById('video-btn');
             if (videoBtn) {
                 videoBtn.textContent = (lang === 'pt') ? 'Vídeo' : 'Video';
+                videoBtn.setAttribute('aria-label', (lang === 'pt') ? 'Abrir vídeo' : 'Open video');
             }
         }
 
-        // Smooth scrolling for navigation links
+        // Smooth scrolling for in-page navigation (unchanged behavior)
         document.addEventListener('DOMContentLoaded', function () {
             const navLinks = document.querySelectorAll('.nav-links a');
             navLinks.forEach(link => {
-                // If link is an in-page anchor, keep smooth scrolling behavior
                 link.addEventListener('click', function (e) {
                     const href = this.getAttribute('href') || '';
                     if (href.startsWith('#')) {
@@ -985,6 +1018,9 @@
                     }
                 });
             });
+
+            // Initialize language visibility reliably on load
+            setLanguageVisibility(currentLang);
 
             // Set initial label for video button according to default language
             const videoBtn = document.getElementById('video-btn');
