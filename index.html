@@ -69,7 +69,7 @@
             padding: 0 20px;
         }
 
-        /* Language Toggle */
+        /* Language Toggle + Video button area (top-right) */
         .language-toggle {
             position: fixed;
             top: 20px;
@@ -77,15 +77,18 @@
             z-index: 1000;
             background: rgba(255, 255, 255, 0.9);
             border-radius: 25px;
-            padding: 8px;
+            padding: 6px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .language-toggle button {
             background: none;
             border: none;
-            padding: 8px 16px;
+            padding: 8px 12px;
             border-radius: 20px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -99,6 +102,24 @@
         }
 
         .language-toggle button:hover {
+            background: #E8D5C4;
+        }
+
+        /* Video button (styled to match language buttons) */
+        .video-btn {
+            display: inline-block;
+            background: none;
+            border: 1px solid transparent;
+            padding: 8px 12px;
+            border-radius: 20px;
+            color: #8B7355;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .video-btn:hover {
             background: #E8D5C4;
         }
 
@@ -211,7 +232,7 @@
             position: absolute;
             width: 200%;
             height: 200%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" patternUnits="userSpaceOnUse" width="100" height="100"><circle cx="25" cy="25" r="1" fill="%23D4AF8C" opacity="0.1"/><circle cx="75" cy="75" r="1.5" fill="%23D4AF8C" opacity="0.1"/><circle cx="50" cy="10" r="1" fill="%23D4AF8C" opacity="0.1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grain)"/></svg>') repeat;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" patternUnits="userSpaceOnUse" width="100" height="100"><circle c[...]
             animation: float 20s ease-in-out infinite;
             opacity: 0.3;
         }
@@ -591,9 +612,12 @@
         <div class="loader"></div>
     </div>
 
-    <div class="language-toggle">
+    <!-- Top-right language toggle + Video button -->
+    <div class="language-toggle" role="toolbar" aria-label="Language and Video">
         <button onclick="switchLanguage('en')" id="en-btn" class="active">EN</button>
         <button onclick="switchLanguage('pt')" id="pt-btn">PT</button>
+        <!-- Video link opens the video page in a new tab -->
+        <a id="video-btn" class="video-btn" href="second-page.html" target="_blank" rel="noopener">Video</a>
     </div>
 
     <header>
@@ -920,7 +944,8 @@
             document.querySelectorAll('.language-toggle button').forEach(btn => {
                 btn.classList.remove('active');
             });
-            document.getElementById(lang + '-btn').classList.add('active');
+            const btn = document.getElementById(lang + '-btn');
+            if (btn) btn.classList.add('active');
 
             // Update content
             document.querySelectorAll('.lang-content').forEach(content => {
@@ -929,36 +954,52 @@
             document.querySelectorAll(`[data-lang="${lang}"]`).forEach(content => {
                 content.classList.add('active');
             });
+
+            // Update the video button label to match language
+            const videoBtn = document.getElementById('video-btn');
+            if (videoBtn) {
+                videoBtn.textContent = (lang === 'pt') ? 'Vídeo' : 'Video';
+            }
         }
 
         // Smooth scrolling for navigation links
         document.addEventListener('DOMContentLoaded', function () {
             const navLinks = document.querySelectorAll('.nav-links a');
             navLinks.forEach(link => {
+                // If link is an in-page anchor, keep smooth scrolling behavior
                 link.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    const targetSection = document.querySelector(targetId);
-                    if (targetSection) {
-                        const headerHeight = 90; // Account for larger header
-                        const targetPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                    const href = this.getAttribute('href') || '';
+                    if (href.startsWith('#')) {
+                        e.preventDefault();
+                        const targetId = href;
+                        const targetSection = document.querySelector(targetId);
+                        if (targetSection) {
+                            const headerHeight = 90; // Account for larger header
+                            const targetPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - headerHeight;
 
-                        window.scrollTo({
-                            top: targetPosition,
-                            behavior: 'smooth'
-                        });
+                            window.scrollTo({
+                                top: targetPosition,
+                                behavior: 'smooth'
+                            });
+                        }
                     }
                 });
             });
+
+            // Set initial label for video button according to default language
+            const videoBtn = document.getElementById('video-btn');
+            if (videoBtn) videoBtn.textContent = (currentLang === 'pt') ? 'Vídeo' : 'Video';
         });
 
         // Header background on scroll
         window.addEventListener('scroll', function () {
             const header = document.querySelector('header');
-            if (window.scrollY > 100) {
-                header.style.background = 'rgba(255, 255, 255, 0.98)';
-            } else {
-                header.style.background = 'rgba(255, 255, 255, 0.95)';
+            if (header) {
+                if (window.scrollY > 100) {
+                    header.style.background = 'rgba(255, 255, 255, 0.98)';
+                } else {
+                    header.style.background = 'rgba(255, 255, 255, 0.95)';
+                }
             }
         });
 
@@ -969,14 +1010,23 @@
         window.addEventListener('scroll', function () {
             const currentScrollY = window.scrollY;
 
-            if (currentScrollY > lastScrollY && currentScrollY > 100) {
-                header.style.transform = 'translateY(-100%)';
-            } else {
-                header.style.transform = 'translateY(0)';
+            if (header) {
+                if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                    header.style.transform = 'translateY(-100%)';
+                } else {
+                    header.style.transform = 'translateY(0)';
+                }
             }
 
             lastScrollY = currentScrollY;
         });
+
+        // Toggle mobile menu (hamburger)
+        function toggleMenu() {
+            document.querySelectorAll('.nav-links').forEach(menu => {
+                menu.classList.toggle('show');
+            });
+        }
 
         // Animate elements on scroll
         function animateOnScroll() {
@@ -998,40 +1048,14 @@
             const elements = document.querySelectorAll('.product-card, .contact-item');
             elements.forEach(element => {
                 element.style.opacity = '0';
-                element.style.transform = 'translateY(30px)';
-                element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                element.style.transform = 'translateY(20px)';
+                element.style.transition = 'all 0.6s ease';
             });
+
+            // Run animateOnScroll on load
+            animateOnScroll();
+            window.addEventListener('scroll', animateOnScroll);
         });
-
-        window.addEventListener('scroll', animateOnScroll);
-        animateOnScroll(); // Run once on load
-        
-        // Toggle menu for mobile view
-        function toggleMenu() {
-            const hamburger = document.querySelector('.hamburger');
-            hamburger.classList.toggle('active');
-
-            const activeMenu = document.querySelector(`.lang-content.active .nav-links`);
-            if (activeMenu) {
-                activeMenu.classList.toggle('show');
-            }
-        }
-        
-
-        // Automatically close menu on nav link click (mobile UX)
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('.nav-links a').forEach(link => {
-                link.addEventListener('click', () => {
-                    const hamburger = document.querySelector('.hamburger');
-                    const activeMenu = document.querySelector(`.lang-content.active .nav-links`);
-                    if (hamburger && activeMenu && window.innerWidth <= 768) {
-                        hamburger.classList.remove('active');
-                        activeMenu.classList.remove('show');
-                    }
-                });
-            });
-        });
-
     </script>
 </body>
 
