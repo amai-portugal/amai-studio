@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video — Amai Studio</title>
+    <style>
+        /* ====== Styles copied from index.html to keep the same look & feel ====== */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .hamburger span {
+            height: 3px;
+            width: 25px;
+            background: #8B7355;
+            margin: 4px 0;
+            transition: 0.4s;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                background: rgba(255, 255, 255, 0.95);
+                position: absolute;
+                top: 100%;
+                right: 0;
+                width: 200px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                padding: 1rem;
+            }
+
+            .nav-links.show {
+                display: flex;
+            }
+
+            .nav-links a {
+                padding: 0.5rem 0;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: #8B7355;
+            background: #FAF4F4;
+            background-image: url('./Background.png');
+            background-size: 200px 200px;
+            background-repeat: repeat;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Language Toggle + Video button area (top-right) */
+        .language-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 25px;
+            padding: 6px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .language-toggle button {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #8B7355;
+        }
+
+        .language-toggle button.active {
+            background: #D4AF8C;
+            color: white;
+        }
+
+        .language-toggle button:hover {
+            background: #E8D5C4;
+        }
+
+        /* Video button (styled to match language buttons) */
+        .video-btn {
+            display: inline-block;
+            background: none;
+            border: 1px solid transparent;
+            padding: 8px 12px;
+            border-radius: 20px;
+            color: #8B7355;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .video-btn:hover {
+            background: #E8D5C4;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 999;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            min-height: 40px;
+            transition: transform 0.3s ease;
+        }
+
+        nav {
+            padding: 0.5rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 60px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #D4AF8C;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            font-family: 'Courier New', monospace;
+        }
+
+        .logo img {
+            height: 200px;
+            width: auto;
+            border-radius: 3px;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                min-height: 40px;
+            }
+
+            nav {
+                padding: 1rem 0;
+                min-height: 40px;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .logo img {
+                height: 100px;
+            }
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #8B7355;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #D4AF8C;
+            transform: translateY(-2px);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            background: #D4AF8C;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Page content specifics */
+        main {
+            padding-top: 140px; /* give room for fixed header */
+            min-height: calc(100vh - 140px);
+        }
+
+        .page-heading {
+            color: #D4AF8C;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 8px;
+        }
+
+        .lead {
+            color: #6B5D4F;
+            margin-bottom: 20px;
+        }
+
+        .video-wrapper {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            border: 1px solid rgba(212,175,140,0.12);
+        }
+
+        .player {
+            display: flex;
+            justify-content: center;
+            margin-top: 12px;
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        footer {
+            background: rgba(139, 115, 85, 0.9);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            backdrop-filter: blur(20px);
+            margin-top: 40px;
+        }
+
+        .muted {
+            color: #6B5D4F;
+        }
+
+        /* Smooth scrolling behavior remains same */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loading" id="loading" aria-hidden="true">
+        <div class="loader" style="width:60px;height:60px;border:3px solid #E8D5C4;border-top:3px solid #D4AF8C;border-radius:50%;animation:spin 1s linear infinite;"></div>
+    </div>
+
+    <!-- Top-right language toggle + Video button -->
+    <div class="language-toggle" role="toolbar" aria-label="Language and Video">
+        <button onclick="switchLanguage('en')" id="en-btn" class="active">EN</button>
+        <button onclick="switchLanguage('pt')" id="pt-btn">PT</button>
+        <!-- On the video page this could open the same page in a new tab or be omitted; we keep it for parity -->
+        <a id="video-btn" class="video-btn" href="second-page.html" target="_blank" rel="noopener">Video</a>
+    </div>
+
+    <header>
+        <nav class="container" role="navigation" aria-label="Main navigation">
+            <div class="logo">
+                <a href="index.html" style="text-decoration:none;color:inherit;">
+                    <img src="./AmailLogo.jpeg" alt="Amai Studio Logo" style="height: 120px;">
+                </a>
+            </div>
+
+            <div class="hamburger" onclick="toggleMenu()" aria-hidden="true" aria-label="Open menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <div class="lang-content active" data-lang="en">
+                <ul class="nav-links" aria-hidden="false">
+                    <li><a href="index.html#home">Home</a></li>
+                    <li><a href="index.html#products">Products</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                    <li><a href="second-page.html" aria-current="page">Video</a></li>
+                </ul>
+            </div>
+
+            <div class="lang-content" data-lang="pt" aria-hidden="true">
+                <ul class="nav-links">
+                    <li><a href="index.html#home">Início</a></li>
+                    <li><a href="index.html#products">Produtos</a></li>
+                    <li><a href="index.html#contact">Contacto</a></li>
+                    <li><a href="second-page.html" aria-current="page">Vídeo</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container" role="main">
+        <section class="video-page">
+            <h1 class="page-heading">Behind the Scenes</h1>
+            <p class="lead muted">A short video about Amai Studio — handcrafted mochi made with love in Portugal.</p>
+
+            <div class="video-wrapper" role="region" aria-label="Amai Studio video player">
+                <h2 style="margin:0 0 8px 0;">Video</h2>
+                <p class="muted" style="margin:0 0 12px 0;">
+                    File used: <strong>20251013 - Amai Studio - Artisanal Mochi, Made with Love in Portugal.mp4</strong>
+                </p>
+
+                <div class="player">
+                    <video controls preload="metadata" poster="" aria-describedby="video-desc">
+                        <source src="./20251013 - Amai Studio - Artisanal Mochi, Made with Love in Portugal.mp4" type="video/mp4">
+                        <!-- Optional additional source formats can be added here for compatibility -->
+                        <!-- <source src="./20251013-Amai-Studio-Artisanal-Mochi.webm" type="video/webm"> -->
+                        <track kind="captions" srclang="en" label="English captions" src="">
+                        Your browser does not support the video tag. You can
+                        <a href="./20251013 - Amai Studio - Artisanal Mochi, Made with Love in Portugal.mp4">download the video</a>.
+                    </video>
+                </div>
+
+                <p id="video-desc" class="muted" style="margin-top:12px;">
+                    Tip: for better compatibility and reliability rename the file to remove spaces (e.g.
+                    <code>20251013-Amai-Studio-Artisanal-Mochi.mp4</code>) and update the source URL accordingly.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="lang-content active" data-lang="en">
+                    <p>&copy; 2024 Amai Studio. Artisanal Mochi, Made with Love in Portugal.</p>
+                </div>
+                <div class="lang-content" data-lang="pt">
+                    <p>&copy; 2024 Amai Studio. Mochi Artesanal, Feito com Amor em Portugal.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Small loading hide (spinner markup uses inline styles above)
+        window.addEventListener('load', function () {
+            const loading = document.getElementById('loading');
+            if (loading) setTimeout(() => loading.style.display = 'none', 600);
+        });
+
+        // Language switching (same logic as index.html)
+        let currentLang = 'en';
+
+        function switchLanguage(lang) {
+            currentLang = lang;
+
+            // Update button states
+            document.querySelectorAll('.language-toggle button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            const btn = document.getElementById(lang + '-btn');
+            if (btn) btn.classList.add('active');
+
+            // Update content visibility
+            document.querySelectorAll('.lang-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll(`[data-lang="${lang}"]`).forEach(content => {
+                content.classList.add('active');
+            });
+
+            // Update the video button label to match language
+            const videoBtn = document.getElementById('video-btn');
+            if (videoBtn) {
+                videoBtn.textContent = (lang === 'pt') ? 'Vídeo' : 'Video';
+            }
+        }
+
+        // Initialize video button label on DOM ready
+        document.addEventListener('DOMContentLoaded', function () {
+            const videoBtn = document.getElementById('video-btn');
+            if (videoBtn) videoBtn.textContent = (currentLang === 'pt') ? 'Vídeo' : 'Video';
+
+            // Mobile menu toggle wiring (mirrors index behavior)
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', function (e) {
+                    // Let external links open normally; for anchors we could scroll to index sections
+                });
+            });
+        });
+
+        // Toggle mobile menu
+        function toggleMenu() {
+            document.querySelectorAll('.nav-links').forEach(menu => {
+                menu.classList.toggle('show');
+            });
+        }
+    </script>
+</body>
+
+</html>
