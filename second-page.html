@@ -224,19 +224,8 @@
             min-height: calc(100vh - 140px);
         }
 
-        .page-heading {
-            color: #D4AF8C;
-            font-family: 'Courier New', monospace;
-            margin-bottom: 8px;
-        }
-
-        .lead {
-            color: #6B5D4F;
-            margin-bottom: 20px;
-        }
-
         .video-wrapper {
-            max-width: 960px;
+            max-width: 1280px;
             margin: 0 auto;
             padding: 20px;
             background: rgba(255,255,255,0.9);
@@ -245,16 +234,21 @@
             border: 1px solid rgba(212,175,140,0.12);
         }
 
-        .player {
+        /* Ensure the video is fully visible without cropping; keep aspect ratio */
+        .video-container {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: black; /* fallback while loading */
             display: flex;
+            align-items: center;
             justify-content: center;
-            margin-top: 12px;
         }
 
-        video {
+        .video-container video {
             width: 100%;
-            height: auto;
-            border-radius: 8px;
+            height: 100%;
+            object-fit: contain; /* show the full video without cropping */
+            display: block;
         }
 
         footer {
@@ -264,10 +258,6 @@
             padding: 2rem 0;
             backdrop-filter: blur(20px);
             margin-top: 40px;
-        }
-
-        .muted {
-            color: #6B5D4F;
         }
 
         /* Smooth scrolling behavior remains same */
@@ -286,7 +276,6 @@
     <div class="language-toggle" role="toolbar" aria-label="Language and Video">
         <button onclick="switchLanguage('en')" id="en-btn" class="active">EN</button>
         <button onclick="switchLanguage('pt')" id="pt-btn">PT</button>
-        <!-- On the video page this could open the same page in a new tab or be omitted; we keep it for parity -->
         <a id="video-btn" class="video-btn" href="second-page.html" target="_blank" rel="noopener">Video</a>
     </div>
 
@@ -326,30 +315,15 @@
 
     <main class="container" role="main">
         <section class="video-page">
-            <h1 class="page-heading">Behind the Scenes</h1>
-            <p class="lead muted">A short video about Amai Studio — handcrafted mochi made with love in Portugal.</p>
-
             <div class="video-wrapper" role="region" aria-label="Amai Studio video player">
-                <h2 style="margin:0 0 8px 0;">Video</h2>
-                <p class="muted" style="margin:0 0 12px 0;">
-                    File used: <strong>20251013 - Amai Studio - Artisanal Mochi, Made with Love in Portugal.mp4</strong>
-                </p>
-
-                <div class="player">
-                    <video controls preload="metadata" poster="" aria-describedby="video-desc">
+                <div class="video-container">
+                    <video controls preload="metadata" poster="">
                         <source src="./20251013 - Amai Studio - Artisanal Mochi, Made with Love in Portugal.mp4" type="video/mp4">
-                        <!-- Optional additional source formats can be added here for compatibility -->
-                        <!-- <source src="./20251013-Amai-Studio-Artisanal-Mochi.webm" type="video/webm"> -->
                         <track kind="captions" srclang="en" label="English captions" src="">
                         Your browser does not support the video tag. You can
                         <a href="./20251013 - Amai Studio - Artisanal Mochi, Made with Love in Portugal.mp4">download the video</a>.
                     </video>
                 </div>
-
-                <p id="video-desc" class="muted" style="margin-top:12px;">
-                    Tip: for better compatibility and reliability rename the file to remove spaces (e.g.
-                    <code>20251013-Amai-Studio-Artisanal-Mochi.mp4</code>) and update the source URL accordingly.
-                </p>
             </div>
         </section>
     </main>
