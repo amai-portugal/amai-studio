@@ -6,53 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Video — Amai Studio</title>
     <style>
-        /* ====== Styles copied from index.html to keep the same look & feel ====== */
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            z-index: 1001;
-        }
-
-        .hamburger span {
-            height: 3px;
-            width: 25px;
-            background: #8B7355;
-            margin: 4px 0;
-            transition: 0.4s;
-        }
-
-        @media (max-width: 768px) {
-            .hamburger {
-                display: flex;
-            }
-
-            .nav-links {
-                display: none;
-                flex-direction: column;
-                background: rgba(255, 255, 255, 0.95);
-                position: absolute;
-                top: 100%;
-                right: 0;
-                width: 200px;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-                padding: 1rem;
-            }
-
-            .nav-links.show {
-                display: flex;
-            }
-
-            .nav-links a {
-                padding: 0.5rem 0;
-            }
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* Reset */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Georgia', serif;
@@ -65,215 +20,141 @@
             overflow-x: hidden;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
-        /* Language Toggle + Video button area (top-right) */
+        /* Language Toggle */
         .language-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
+            position: fixed; top: 20px; right: 20px; z-index: 1000;
             background: rgba(255, 255, 255, 0.9);
-            border-radius: 25px;
-            padding: 6px;
+            border-radius: 25px; padding: 8px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            display: flex; gap: 6px; align-items: center;
         }
-
         .language-toggle button {
-            background: none;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            color: #8B7355;
+            background: none; border: none; padding: 8px 16px;
+            border-radius: 20px; cursor: pointer; transition: all 0.3s ease;
+            font-weight: 500; color: #8B7355;
         }
-
-        .language-toggle button.active {
-            background: #D4AF8C;
-            color: white;
-        }
-
-        .language-toggle button:hover {
-            background: #E8D5C4;
-        }
-
-        /* Video button (styled to match language buttons) */
-        .video-btn {
-            display: inline-block;
-            background: none;
-            border: 1px solid transparent;
-            padding: 8px 12px;
-            border-radius: 20px;
-            color: #8B7355;
-            font-weight: 600;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .video-btn:hover {
-            background: #E8D5C4;
-        }
+        .language-toggle button.active { background: #D4AF8C; color: white; }
+        .language-toggle button:hover { background: #E8D5C4; }
 
         /* Header */
         header {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 999;
+            position: fixed; width: 100%; top: 0; z-index: 999;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease, background 0.3s ease;
+            min-height: 40px;
+        }
+        nav {
+            padding: 0.5rem 0; display: flex; justify-content: space-between; align-items: center;
             min-height: 60px;
         }
+        .logo { display: flex; align-items: center; gap: 1rem; }
+        .logo img { height: 200px; width: auto; border-radius: 3px; }
 
-        nav {
-            padding: 0.5rem 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .nav-links { display: flex; list-style: none; gap: 2rem; }
+        .nav-links a {
+            text-decoration: none; color: #8B7355; font-weight: 500;
+            transition: all 0.3s ease; position: relative;
+        }
+        .nav-links a:hover { color: #D4AF8C; transform: translateY(-2px); }
+        .nav-links a::after {
+            content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 50%;
+            background: #D4AF8C; transition: all 0.3s ease; transform: translateX(-50%);
+        }
+        .nav-links a:hover::after { width: 100%; }
+
+        /* Hamburger (mobile) */
+        .hamburger {
+            display: none; flex-direction: column; cursor: pointer; z-index: 1001;
+        }
+        .hamburger span {
+            height: 3px; width: 25px; background: #8B7355; margin: 4px 0; transition: 0.4s;
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            font-size: 2rem;
-            font-weight: bold;
-            color: #D4AF8C;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-            font-family: 'Courier New', monospace;
-        }
-
-        .logo img {
-            height: 100px;
-            width: auto;
-            border-radius: 3px;
-        }
+        /* Language content blocks */
+        .lang-content { display: none; }
+        .lang-content.active { display: block; }
 
         @media (max-width: 768px) {
-            header {
-                min-height: 40px;
+            header { min-height: 40px; }
+            nav { padding: 1rem 0; min-height: 40px; }
+            .logo img { height: 100px; }
+
+            .hamburger { display: flex; }
+
+            .nav-links {
+                display: none; flex-direction: column; background: rgba(255,255,255,0.95);
+                position: absolute; top: 100%; right: 0; width: 200px;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.1); padding: 1rem;
             }
-
-            nav {
-                padding: 1rem 0;
-            }
-
-            .logo {
-                font-size: 1.5rem;
-            }
-
-            .logo img {
-                height: 80px;
-            }
+            .nav-links.show { display: flex; }
+            .nav-links a { padding: 0.5rem 0; }
         }
 
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-        }
+        /* Main: add enough top padding to clear tall header/logo */
+        main { padding-top: 220px; }
+        @media (max-width: 768px) { main { padding-top: 120px; } }
 
-        .nav-links a {
-            text-decoration: none;
-            color: #8B7355;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .nav-links a:hover {
-            color: #D4AF8C;
-            transform: translateY(-2px);
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -5px;
-            left: 50%;
-            background: #D4AF8C;
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        /* Page content specifics */
-        main {
-            padding-top: 120px; /* give room for fixed header */
-        }
-
+        /* Video area */
         .video-wrapper {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 20px;
+            max-width: 1280px; margin: 0 auto; padding: 20px;
             background: rgba(255, 255, 255, 0.9);
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+            border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.06);
             border: 1px solid rgba(212, 175, 140, 0.12);
         }
-
-        /* Ensure the video is fully visible without cropping; keep aspect ratio */
         .video-container {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            background: black; /* fallback while loading */
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 100%; aspect-ratio: 16 / 9; background: black;
+            display: flex; align-items: center; justify-content: center; border-radius: 12px; overflow: hidden;
         }
+        .video-container video { width: 100%; height: 100%; object-fit: contain; }
 
-        .video-container video {
-            width: 100%;
-            height: 100%;
-            object-fit: contain; /* show the full video without cropping */
-        }
-
+        /* Footer */
         footer {
-            background: rgba(139, 115, 85, 0.9);
-            color: white;
-            text-align: center;
-            padding: 2rem 0;
-            backdrop-filter: blur(20px);
-            margin-top: 40px;
+            background: rgba(139, 115, 85, 0.9); color: white; text-align: center; padding: 2rem 0;
+            backdrop-filter: blur(20px); margin-top: 40px;
         }
+        .footer-content {
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+        }
+        .social-links a { color: white; font-size: 1.5rem; margin: 0 1rem; transition: all 0.3s ease; text-decoration: none; }
+        .social-links a:hover { color: #D4AF8C; transform: scale(1.2); }
 
-        /* Smooth scrolling behavior remains same */
-        html {
-            scroll-behavior: smooth;
+        /* Loading overlay */
+        .loading {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #FFF8F0, #F5F0E8);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 9999; transition: opacity 0.5s ease;
         }
+        .loading.fade-out { opacity: 0; pointer-events: none; }
+        .loader {
+            width: 60px; height: 60px; border: 3px solid #E8D5C4; border-top: 3px solid #D4AF8C;
+            border-radius: 50%; animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg);} 100% { transform: rotate(360deg);} }
+
+        /* Smooth scrolling behavior */
+        html { scroll-behavior: smooth; }
     </style>
 </head>
 
 <body>
+    <!-- Loading -->
     <div class="loading" id="loading" aria-hidden="true">
-        <div class="loader" style="width:60px;height:60px;border:3px solid #E8D5C4;border-top:3px solid #D4AF8C;border-radius:50%;animation:spin 1s linear infinite;"></div>
+        <div class="loader"></div>
     </div>
 
-    <!-- Top-right language toggle + Video button -->
-    <div class="language-toggle" role="toolbar" aria-label="Language and Video">
+    <!-- Language toggle -->
+    <div class="language-toggle" role="toolbar" aria-label="Language">
         <button onclick="switchLanguage('en')" id="en-btn" class="active">EN</button>
         <button onclick="switchLanguage('pt')" id="pt-btn">PT</button>
-        <a id="video-btn" class="video-btn" href="second-page.html" target="_blank" rel="noopener">Video</a>
     </div>
 
+    <!-- Header -->
     <header>
         <nav class="container" role="navigation" aria-label="Main navigation">
             <div class="logo">
@@ -282,12 +163,11 @@
                 </a>
             </div>
 
-            <div class="hamburger" onclick="toggleMenu()" aria-hidden="true" aria-label="Open menu">
-                <span></span>
-                <span></span>
-                <span></span>
+            <div class="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
             </div>
 
+            <!-- EN nav -->
             <div class="lang-content active" data-lang="en">
                 <ul class="nav-links" aria-hidden="false">
                     <li><a href="index.html#home">Home</a></li>
@@ -297,6 +177,7 @@
                 </ul>
             </div>
 
+            <!-- PT nav -->
             <div class="lang-content" data-lang="pt" aria-hidden="true">
                 <ul class="nav-links">
                     <li><a href="index.html#home">Início</a></li>
@@ -308,21 +189,22 @@
         </nav>
     </header>
 
-    <main class="container" role="main">
+    <!-- Main -->
+    <main role="main" class="container">
         <section class="video-page">
             <div class="video-wrapper" role="region" aria-label="Amai Studio video player">
                 <div class="video-container">
                     <video controls preload="metadata" poster="">
                         <source src="./20251013 - Amai Studio - Artisanal Mochi, Made with Love in Portugal.mp4" type="video/mp4">
                         <track kind="captions" srclang="en" label="English captions" src="">
-                        Your browser does not support the video tag. You can
-                        <a href="./20251013 - Amai Studio - Artisanal Mochi, Made with Love in Portugal.mp4">download the video</a>.
+                        Your browser does not support the video tag.
                     </video>
                 </div>
             </div>
         </section>
     </main>
 
+    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -332,64 +214,85 @@
                 <div class="lang-content" data-lang="pt">
                     <p>&copy; 2024 Amai Studio. Mochi Artesanal, Feito com Amor em Portugal.</p>
                 </div>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/amaistudio_portugal?igsh=OGV1cWY3azhqZHF1&utm_source=qr" target="_blank" rel="noopener">
+                        <img src="instagram-logo.png" alt="Instagram logo" style="width:24px;height:24px;margin-right:5px;vertical-align:middle;">
+                    </a>
+                    <a href="mailto:amai.studioportugal@gmail.com" aria-label="Email">✉️</a>
+                    <a href="tel:+351931875618" aria-label="Phone">📞</a>
+                </div>
             </div>
         </div>
     </footer>
 
     <script>
-        // Small loading hide (spinner markup uses inline styles above)
+        // Loading fade-out
         window.addEventListener('load', function () {
             const loading = document.getElementById('loading');
-            if (loading) setTimeout(() => loading.style.display = 'none', 600);
+            setTimeout(() => loading.classList.add('fade-out'), 1000);
         });
 
-        // Language switching (same logic as index.html)
+        // Language switching (match index.html behavior)
         let currentLang = 'en';
-
         function switchLanguage(lang) {
             currentLang = lang;
 
-            // Update button states
-            document.querySelectorAll('.language-toggle button').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            const btn = document.getElementById(lang + '-btn');
-            if (btn) btn.classList.add('active');
+            // Toggle buttons
+            document.querySelectorAll('.language-toggle button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(lang + '-btn').classList.add('active');
 
-            // Update content visibility
-            document.querySelectorAll('.lang-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            document.querySelectorAll(`[data-lang="${lang}"]`).forEach(content => {
-                content.classList.add('active');
-            });
+            // Toggle lang content
+            document.querySelectorAll('.lang-content').forEach(node => node.classList.remove('active'));
+            document.querySelectorAll('[data-lang="' + lang + '"]').forEach(node => node.classList.add('active'));
 
-            // Update the video button label to match language
-            const videoBtn = document.getElementById('video-btn');
-            if (videoBtn) {
-                videoBtn.textContent = (lang === 'pt') ? 'Vídeo' : 'Video';
-            }
+            // If a mobile menu is open on the now-hidden language, close it
+            const openMenus = document.querySelectorAll('.nav-links.show');
+            openMenus.forEach(m => m.classList.remove('show'));
+            const hamburger = document.querySelector('.hamburger');
+            if (hamburger) hamburger.classList.remove('active');
         }
 
-        // Initialize video button label on DOM ready
-        document.addEventListener('DOMContentLoaded', function () {
-            const videoBtn = document.getElementById('video-btn');
-            if (videoBtn) videoBtn.textContent = (currentLang === 'pt') ? 'Vídeo' : 'Video';
+        // Header background tweak on scroll (cosmetic, matches index style)
+        window.addEventListener('scroll', function () {
+            const header = document.querySelector('header');
+            if (!header) return;
+            header.style.background = (window.scrollY > 100) ? 'rgba(255, 255, 255, 0.98)' : 'rgba(255, 255, 255, 0.95)';
+        });
 
-            // Mobile menu toggle wiring (mirrors index behavior)
+        // Hide header on scroll down, show on scroll up (like index)
+        let lastScrollY = window.scrollY;
+        const headerEl = document.querySelector('header');
+        window.addEventListener('scroll', function () {
+            const y = window.scrollY;
+            if (y > lastScrollY && y > 100) {
+                headerEl.style.transform = 'translateY(-100%)';
+            } else {
+                headerEl.style.transform = 'translateY(0)';
+            }
+            lastScrollY = y;
+        });
+
+        // Mobile menu toggle
+        function toggleMenu() {
+            const activeMenu = document.querySelector('.lang-content.active .nav-links');
+            if (activeMenu) activeMenu.classList.toggle('show');
+            const hamburger = document.querySelector('.hamburger');
+            if (hamburger) hamburger.classList.toggle('active');
+        }
+
+        // Close menu on link click (mobile UX)
+        document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.nav-links a').forEach(link => {
-                link.addEventListener('click', function (e) {
-                    // Let external links open normally; for anchors we could scroll to index sections
+                link.addEventListener('click', () => {
+                    const activeMenu = document.querySelector('.lang-content.active .nav-links');
+                    const hamburger = document.querySelector('.hamburger');
+                    if (activeMenu && hamburger && window.innerWidth <= 768) {
+                        activeMenu.classList.remove('show');
+                        hamburger.classList.remove('active');
+                    }
                 });
             });
         });
-
-        // Toggle mobile menu
-        function toggleMenu() {
-            document.querySelectorAll('.nav-links').forEach(menu => {
-                menu.classList.toggle('show');
-            });
-        }
     </script>
 </body>
 
