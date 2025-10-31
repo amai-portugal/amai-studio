@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Video — Amai Studio</title>
   <style>
-    :root { --header-offset: 300px; } /* safer fallback before JS runs */
+    :root { --header-offset: 340px; } /* safer fallback before JS runs */
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -222,9 +222,11 @@
   </footer>
 
   <script>
-    // Tunable extra buffer for header overlap
-    const HEADER_EXTRA_BUFFER_DESKTOP = 72; // adjust if needed
-    const HEADER_EXTRA_BUFFER_MOBILE  = 56; // adjust if needed
+    // Tunable buffers
+    const HEADER_EXTRA_BUFFER_DESKTOP = 96; // was 72
+    const HEADER_EXTRA_BUFFER_MOBILE  = 64; // was 56
+    const HEADER_SAFETY_PADDING       = 16; // extra cushion added by JS
+
     function currentHeaderBuffer() {
       return window.innerWidth <= 768 ? HEADER_EXTRA_BUFFER_MOBILE : HEADER_EXTRA_BUFFER_DESKTOP;
     }
@@ -242,7 +244,7 @@
       const main = document.querySelector('main');
       if (!header || !main) return;
       const h = Math.ceil(header.getBoundingClientRect().height);
-      const total = h + extra;
+      const total = h + extra + HEADER_SAFETY_PADDING;
       // CSS variable for main rule + direct fallback padding
       document.documentElement.style.setProperty('--header-offset', total + 'px');
       main.style.paddingTop = total + 'px';
