@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Video — Amai Studio</title>
   <style>
-    :root { --header-offset: 240px; } /* fallback */
+    :root { --header-offset: 300px; } /* safer fallback before JS runs */
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -92,12 +92,12 @@
       .nav-links a { padding: 0.5rem 0; }
     }
 
-    /* Main offset uses dynamic header height */
+    /* Main offset uses dynamic header height (set by JS), with safe fallback above */
     main { padding-top: var(--header-offset); }
 
     /* Video area */
     .video-wrapper {
-      max-width: 1280px; margin: 0 auto; padding: 20px;
+      max-width: 1280px; margin: 16px auto 0; padding: 20px; /* small extra gap above */
       background: rgba(255, 255, 255, 0.9);
       border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.06);
       border: 1px solid rgba(212,175,140,0.12);
@@ -222,32 +222,44 @@
   </footer>
 
   <script>
+    // Tunable extra buffer for header overlap
+    const HEADER_EXTRA_BUFFER_DESKTOP = 72; // adjust if needed
+    const HEADER_EXTRA_BUFFER_MOBILE  = 56; // adjust if needed
+    function currentHeaderBuffer() {
+      return window.innerWidth <= 768 ? HEADER_EXTRA_BUFFER_MOBILE : HEADER_EXTRA_BUFFER_DESKTOP;
+    }
+
     // Fade out loader
     window.addEventListener('load', function () {
       const loading = document.getElementById('loading');
       if (loading) setTimeout(() => loading.classList.add('fade-out'), 700);
-      setMainOffset(); // after images load, we can measure header
+      setMainOffset(currentHeaderBuffer()); // measure after images/fonts load
     });
 
     // Dynamically set main top padding based on actual header height
     function setMainOffset(extra = 20) {
       const header = document.querySelector('header');
-      if (!header) return;
+      const main = document.querySelector('main');
+      if (!header || !main) return;
       const h = Math.ceil(header.getBoundingClientRect().height);
-      document.documentElement.style.setProperty('--header-offset', (h + extra) + 'px');
+      const total = h + extra;
+      // CSS variable for main rule + direct fallback padding
+      document.documentElement.style.setProperty('--header-offset', total + 'px');
+      main.style.paddingTop = total + 'px';
     }
-    window.addEventListener('resize', () => setMainOffset(20));
-    window.addEventListener('orientationchange', () => setMainOffset(20));
+    window.addEventListener('resize', () => setMainOffset(currentHeaderBuffer()));
+    window.addEventListener('orientationchange', () => setMainOffset(currentHeaderBuffer()));
 
     // Language switching
     let currentLang = 'en';
     function switchLanguage(lang) {
       currentLang = lang;
       document.querySelectorAll('.language-toggle button').forEach(b => b.classList.remove('active'));
-      document.getElementById(lang + '-btn').classList.add('active');
+      const langBtn = document.getElementById(lang + '-btn');
+      if (langBtn) langBtn.classList.add('active');
       document.querySelectorAll('.lang-content').forEach(n => n.classList.remove('active'));
       document.querySelectorAll('[data-lang="' + lang + '"]').forEach(n => n.classList.add('active'));
-      setMainOffset(20); // recalc in case header layout changes
+      setMainOffset(currentHeaderBuffer()); // recalc in case header layout changes
     }
 
     // Header background tweak on scroll
@@ -278,6 +290,10 @@
         });
       });
     });
+
+    // Expose functions for inline handlers
+    window.toggleMenu = toggleMenu;
+    window.switchLanguage = switchLanguage;
   </script>
 </body>
 </html>
