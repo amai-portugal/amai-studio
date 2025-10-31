@@ -903,138 +903,160 @@
         </div>
     </footer>
 
-    <script>
-        // Loading animation
-        window.addEventListener('load', function () {
-            const loading = document.getElementById('loading');
-            setTimeout(() => {
-                loading.classList.add('fade-out');
-            }, 1000);
-        });
+   <script>
+  // Loading animation
+  window.addEventListener('load', function () {
+    const loading = document.getElementById('loading');
+    if (loading) {
+      setTimeout(() => loading.classList.add('fade-out'), 1000);
+    }
+    // Ensure content clears the actual header height after everything loads (logo, fonts)
+    setMainOffset(20);
+  });
 
-        // Language switching
-        let currentLang = 'en';
+  // Dynamically set the main padding-top so content never sits under the fixed header
+  function setMainOffset(extra = 20) {
+    const headerEl = document.querySelector('header');
+    const mainEl = document.querySelector('main');
+    if (!headerEl || !mainEl) return;
+    const h = Math.ceil(headerEl.getBoundingClientRect().height);
+    // Use both a CSS variable (if your CSS uses it) and direct padding as a fallback
+    document.documentElement.style.setProperty('--header-offset', (h + extra) + 'px');
+    mainEl.style.paddingTop = (h + extra) + 'px';
+  }
+  window.addEventListener('resize', () => setMainOffset(20));
+  window.addEventListener('orientationchange', () => setMainOffset(20));
 
-        function switchLanguage(lang) {
-            currentLang = lang;
+  // Language switching
+  let currentLang = 'en';
+  function switchLanguage(lang) {
+    currentLang = lang;
 
-            // Update button states
-            document.querySelectorAll('.language-toggle button').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.getElementById(lang + '-btn').classList.add('active');
+    // Update button states
+    document.querySelectorAll('.language-toggle button').forEach(btn => {
+      btn.classList.remove('active');
+    });
+    const btn = document.getElementById(lang + '-btn');
+    if (btn) btn.classList.add('active');
 
-            // Update content
-            document.querySelectorAll('.lang-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            document.querySelectorAll(`[data-lang="${lang}"]`).forEach(content => {
-                content.classList.add('active');
-            });
+    // Update content visibility
+    document.querySelectorAll('.lang-content').forEach(content => {
+      content.classList.remove('active');
+    });
+    document.querySelectorAll('[data-lang="' + lang + '"]').forEach(content => {
+      content.classList.add('active');
+    });
+
+    // Close any open mobile menu when switching language
+    const hamburger = document.querySelector('.hamburger');
+    const openMenu = document.querySelector('.nav-links.show');
+    if (hamburger) hamburger.classList.remove('active');
+    if (openMenu) openMenu.classList.remove('show');
+
+    // Recalculate header offset in case layout changed
+    setMainOffset(20);
+  }
+
+  // Smooth scrolling for in-page anchor links only
+  document.addEventListener('DOMContentLoaded', function () {
+    const navLinks = document.querySelectorAll('.nav-links a');
+    navLinks.forEach(link => {
+      link.addEventListener('click', function (e) {
+        const href = this.getAttribute('href') || '';
+
+        // Only intercept links that start with '#'
+        if (href.startsWith('#')) {
+          const targetSection = document.querySelector(href);
+          if (targetSection) {
+            e.preventDefault();
+            const headerEl = document.querySelector('header');
+            const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 90;
+            const targetPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+
+            window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+          }
         }
 
-        // Smooth scrolling for navigation links
-        document.addEventListener('DOMContentLoaded', function () {
-            const navLinks = document.querySelectorAll('.nav-links a');
-            navLinks.forEach(link => {
-                link.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    const targetSection = document.querySelector(targetId);
-                    if (targetSection) {
-                        const headerHeight = 90; // Account for larger header
-                        const targetPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - headerHeight;
-
-                        window.scrollTo({
-                            top: targetPosition,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
-        });
-
-        // Header background on scroll
-        window.addEventListener('scroll', function () {
-            const header = document.querySelector('header');
-            if (window.scrollY > 100) {
-                header.style.background = 'rgba(255, 255, 255, 0.98)';
-            } else {
-                header.style.background = 'rgba(255, 255, 255, 0.95)';
-            }
-        });
-
-        // Hide header on scroll up, show on scroll down
-        let lastScrollY = window.scrollY;
-        const header = document.querySelector('header');
-
-        window.addEventListener('scroll', function () {
-            const currentScrollY = window.scrollY;
-
-            if (currentScrollY > lastScrollY && currentScrollY > 100) {
-                header.style.transform = 'translateY(-100%)';
-            } else {
-                header.style.transform = 'translateY(0)';
-            }
-
-            lastScrollY = currentScrollY;
-        });
-
-        // Animate elements on scroll
-        function animateOnScroll() {
-            const elements = document.querySelectorAll('.product-card, .contact-item');
-
-            elements.forEach(element => {
-                const elementTop = element.getBoundingClientRect().top;
-                const elementVisible = 150;
-
-                if (elementTop < window.innerHeight - elementVisible) {
-                    element.style.opacity = '1';
-                    element.style.transform = 'translateY(0)';
-                }
-            });
+        // Close mobile menu after any nav click on small screens
+        const hamburger = document.querySelector('.hamburger');
+        const activeMenu = document.querySelector('.lang-content.active .nav-links');
+        if (hamburger && activeMenu && window.innerWidth <= 768) {
+          hamburger.classList.remove('active');
+          activeMenu.classList.remove('show');
         }
+      });
+    });
+  });
 
-        // Initialize animation styles
-        document.addEventListener('DOMContentLoaded', function () {
-            const elements = document.querySelectorAll('.product-card, .contact-item');
-            elements.forEach(element => {
-                element.style.opacity = '0';
-                element.style.transform = 'translateY(30px)';
-                element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            });
-        });
+  // Header background on scroll
+  window.addEventListener('scroll', function () {
+    const headerEl = document.querySelector('header');
+    if (!headerEl) return;
+    headerEl.style.background = (window.scrollY > 100)
+      ? 'rgba(255, 255, 255, 0.98)'
+      : 'rgba(255, 255, 255, 0.95)';
+  });
 
-        window.addEventListener('scroll', animateOnScroll);
-        animateOnScroll(); // Run once on load
-        
-        // Toggle menu for mobile view
-        function toggleMenu() {
-            const hamburger = document.querySelector('.hamburger');
-            hamburger.classList.toggle('active');
+  // Hide header on scroll down, show on scroll up
+  let lastScrollY = window.scrollY;
+  window.addEventListener('scroll', function () {
+    const headerEl = document.querySelector('header');
+    if (!headerEl) return;
 
-            const activeMenu = document.querySelector(`.lang-content.active .nav-links`);
-            if (activeMenu) {
-                activeMenu.classList.toggle('show');
-            }
-        }
-        
+    const currentScrollY = window.scrollY;
+    if (currentScrollY > lastScrollY && currentScrollY > 100) {
+      headerEl.style.transform = 'translateY(-100%)';
+    } else {
+      headerEl.style.transform = 'translateY(0)';
+    }
+    lastScrollY = currentScrollY;
+  });
 
-        // Automatically close menu on nav link click (mobile UX)
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('.nav-links a').forEach(link => {
-                link.addEventListener('click', () => {
-                    const hamburger = document.querySelector('.hamburger');
-                    const activeMenu = document.querySelector(`.lang-content.active .nav-links`);
-                    if (hamburger && activeMenu && window.innerWidth <= 768) {
-                        hamburger.classList.remove('active');
-                        activeMenu.classList.remove('show');
-                    }
-                });
-            });
-        });
+  // Animate elements on scroll (safe if selectors don't exist)
+  function animateOnScroll() {
+    const elements = document.querySelectorAll('.product-card, .contact-item');
+    if (!elements.length) return;
 
-    </script>
+    elements.forEach(element => {
+      const elementTop = element.getBoundingClientRect().top;
+      const elementVisible = 150;
+      if (elementTop < window.innerHeight - elementVisible) {
+        element.style.opacity = '1';
+        element.style.transform = 'translateY(0)';
+      }
+    });
+  }
+
+  // Initialize animation styles (safe if selectors don't exist)
+  document.addEventListener('DOMContentLoaded', function () {
+    const elements = document.querySelectorAll('.product-card, .contact-item');
+    if (!elements.length) return;
+
+    elements.forEach(element => {
+      element.style.opacity = '0';
+      element.style.transform = 'translateY(30px)';
+      element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    });
+  });
+
+  window.addEventListener('scroll', animateOnScroll);
+  animateOnScroll(); // Run once on load
+
+  // Toggle menu for mobile view
+  function toggleMenu() {
+    const hamburger = document.querySelector('.hamburger');
+    if (hamburger) hamburger.classList.toggle('active');
+
+    const activeMenu = document.querySelector('.lang-content.active .nav-links');
+    if (activeMenu) {
+      activeMenu.classList.toggle('show');
+    }
+  }
+
+  // Expose toggleMenu if it's called inline from HTML
+  window.toggleMenu = toggleMenu;
+  window.switchLanguage = switchLanguage;
+</script>
 </body>
 
 </html>
