@@ -1,1062 +1,160 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="pt" data-lang="pt">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amai Studio - Artisanal Mochi, Made with Love in Portugal</title>
-    <style>
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            z-index: 1001;
-        }
-
-        .hamburger span {
-            height: 3px;
-            width: 25px;
-            background: #8B7355;
-            margin: 4px 0;
-            transition: 0.4s;
-        }
-
-        @media (max-width: 768px) {
-            .hamburger {
-                display: flex;
-            }
-
-            .nav-links {
-                display: none;
-                flex-direction: column;
-                background: rgba(255, 255, 255, 0.95);
-                position: absolute;
-                top: 100%;
-                right: 0;
-                width: 200px;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-                padding: 1rem;
-            }
-
-            .nav-links.show {
-                display: flex;
-            }
-
-            .nav-links a {
-                padding: 0.5rem 0;
-            }
-        }
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Georgia', serif;
-            line-height: 1.6;
-            color: #8B7355;
-            background: #FAF4F4;
-            background-image: url('./Background.png');
-            background-size: 200px 200px;
-            background-repeat: repeat;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Language Toggle */
-        .language-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 25px;
-            padding: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-        }
-
-        .language-toggle button {
-            background: none;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            color: #8B7355;
-        }
-
-        .language-toggle button.active {
-            background: #D4AF8C;
-            color: white;
-        }
-
-        .language-toggle button:hover {
-            background: #E8D5C4;
-        }
-
-        /* Header */
-        header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 999;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            min-height: 40px;
-            transition: transform 0.3s ease;
-        }
-
-        nav {
-            padding: 0.5rem 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            min-height: 60px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            font-size: 2rem;
-            font-weight: bold;
-            color: #D4AF8C;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-            font-family: 'Courier New', monospace;
-        }
-
-        .logo img {
-            height: 200px;
-            width: auto;
-            border-radius: 3px;
-        }
-
-        @media (max-width: 768px) {
-            header {
-                min-height: 40px;
-            }
-
-            nav {
-                padding: 1rem 0;
-                min-height: 40px;
-            }
-
-            .logo {
-                font-size: 1.5rem;
-            }
-
-            .logo img {
-                height: 100px;
-            }
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #8B7355;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .nav-links a:hover {
-            color: #D4AF8C;
-            transform: translateY(-2px);
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -5px;
-            left: 50%;
-            background: #D4AF8C;
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            background: rgba(253, 248, 248, 0.9);
-            position: relative;
-            overflow: hidden;
-            padding-top: 200px;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" patternUnits="userSpaceOnUse" width="100" height="100"><circle cx="25" cy="25" r="1" fill="%23D4AF8C" opacity="0.1"/><circle cx="75" cy="75" r="1.5" fill="%23D4AF8C" opacity="0.1"/><circle cx="50" cy="10" r="1" fill="%23D4AF8C" opacity="0.1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grain)"/></svg>') repeat;
-            animation: float 20s ease-in-out infinite;
-            opacity: 0.3;
-        }
-
-        @keyframes float {
-
-            0%,
-            100% {
-                transform: translate(0, 0) rotate(0deg);
-            }
-
-            33% {
-                transform: translate(30px, -30px) rotate(120deg);
-            }
-
-            66% {
-                transform: translate(-20px, 20px) rotate(240deg);
-            }
-        }
-
-        .hero-content {
-            text-align: center;
-            z-index: 2;
-            position: relative;
-        }
-
-        .hero h1 {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #D4AF8C, #B8926A);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-            animation: fadeInUp 1s ease;
-            font-family: 'Courier New', monospace;
-        }
-
-        .slogan {
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
-            color: #8B7355;
-            font-style: italic;
-            animation: fadeInUp 1s ease 0.3s both;
-        }
-
-        .hero-description {
-            font-size: 1.2rem;
-            max-width: 600px;
-            margin: 0 auto 2rem;
-            color: #6B5D4F;
-            animation: fadeInUp 1s ease 0.6s both;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Products Section */
-        .products {
-            padding: 5rem 0;
-            background: rgba(255, 255, 255, 0.6);
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 3rem;
-            margin-bottom: 3rem;
-            color: #D4AF8C;
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 3px;
-            background: linear-gradient(90deg, #D4AF8C, #B8926A);
-            border-radius: 2px;
-        }
-
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .product-card {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(212, 175, 140, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .product-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 15px;
-            margin-bottom: 1rem;
-        }
-
-        .product-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(212, 175, 140, 0.1), transparent);
-            transform: rotate(45deg);
-            transition: all 0.6s ease;
-            opacity: 0;
-        }
-
-        .product-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        }
-
-        .product-card:hover::before {
-            animation: shine 0.6s ease;
-            opacity: 1;
-        }
-
-        @keyframes shine {
-            0% {
-                transform: translateX(-100%) translateY(-100%) rotate(45deg);
-            }
-
-            100% {
-                transform: translateX(100%) translateY(100%) rotate(45deg);
-            }
-        }
-
-        .product-name {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            color: #D4AF8C;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .japanese-name {
-            font-size: 1rem;
-            color: #B8926A;
-            font-weight: normal;
-        }
-
-        .product-description {
-            color: #6B5D4F;
-            margin-bottom: 1rem;
-            line-height: 1.7;
-        }
-
-        .product-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-
-        .tag {
-            background: linear-gradient(135deg, #E8D5C4, #D4AF8C);
-            color: white;
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .tag.vegan {
-            background: linear-gradient(135deg, #81C784, #66BB6A);
-        }
-
-        .tag.gluten-free {
-            background: linear-gradient(135deg, #FFB74D, #FFA726);
-        }
-
-        .tag.low-fat {
-            background: linear-gradient(135deg, #64B5F6, #42A5F5);
-        }
-
-        /* Contact Section */
-        .contact {
-            padding: 5rem 0;
-            background: rgba(253, 248, 248, 0.8);
-        }
-
-        .contact-content {
-            text-align: center;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .contact-info {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .contact-item {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .contact-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .contact-item h3 {
-            color: #D4AF8C;
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-        }
-
-        .contact-item a {
-            color: #6B5D4F;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .contact-item a:hover {
-            color: #D4AF8C;
-        }
-
-        /* Footer */
-        footer {
-            background: rgba(139, 115, 85, 0.9);
-            color: white;
-            text-align: center;
-            padding: 2rem 0;
-            backdrop-filter: blur(20px);
-        }
-
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .social-links a {
-            color: white;
-            font-size: 1.5rem;
-            margin: 0 1rem;
-            transition: all 0.3s ease;
-            text-decoration: none;
-        }
-
-        .social-links a:hover {
-            color: #D4AF8C;
-            transform: scale(1.2);
-        }
-
-        /* Language Content */
-        .lang-content {
-            display: none;
-        }
-
-        .lang-content.active {
-            display: block;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .slogan {
-                font-size: 1.2rem;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .products-grid {
-                grid-template-columns: 1fr;
-            }
-
-            /* .contact-info grid columns setting removed since it's now always 1fr */
-
-            .footer-content {
-                flex-direction: column;
-                text-align: center;
-            }
-        }
-
-        .product-card--matcha {
-            background-image: url('./Matcha.png');
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            min-height: 380px;
-        }
-
-        .product-
-        /* Smooth scrolling */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        /* Loading animation */
-        .loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #FFF8F0, #F5F0E8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease;
-        }
-
-        .loading.fade-out {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .loader {
-            width: 60px;
-            height: 60px;
-            border: 3px solid #E8D5C4;
-            border-top: 3px solid #D4AF8C;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Amai Studio — Sobremesas asiáticas com alma portuguesa</title>
+  <meta name="description" content="Mochi de gelado, cheesecakes e sobremesas de assinatura, feitos à mão em pequenos lotes para restaurantes e cafés em Portugal.">
+  <meta property="og:title" content="Amai Studio — Sobremesas asiáticas com alma portuguesa">
+  <meta property="og:description" content="Mochi de gelado, cheesecakes e sobremesas de assinatura para restaurantes e cafés.">
+  <meta property="og:image" content="assets/yuzu-panna-cotta-transparent.webp">
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-    <div class="loading" id="loading">
-        <div class="loader"></div>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <a href="#top" class="nav-brand">
+      <img src="assets/logo.svg" alt="Amai Studio" class="nav-logo">
+      <span class="nav-name">Amai Studio</span>
+    </a>
+    <div class="nav-links">
+      <a href="#produtos"><span class="lang-pt">Produtos</span><span class="lang-en">Products</span></a>
+      <a href="#sobre"><span class="lang-pt">Sobre</span><span class="lang-en">About</span></a>
+      <a href="#restaurantes" class="nav-restaurantes"><span class="lang-pt">Para Restaurantes</span><span class="lang-en">For Restaurants</span></a>
+      <a href="#contacto" class="nav-cta"><span class="lang-pt">Contacto</span><span class="lang-en">Contact</span></a>
+      <button type="button" class="lang-toggle" id="langToggle" aria-label="Switch language">
+        <span class="lang-opt" data-set-lang="pt">PT</span><span class="lang-sep">/</span><span class="lang-opt" data-set-lang="en">EN</span>
+      </button>
     </div>
+  </nav>
 
-    <div class="language-toggle">
-        <button onclick="switchLanguage('en')" id="en-btn" class="active">EN</button>
-        <button onclick="switchLanguage('pt')" id="pt-btn">PT</button>
+  <!-- HERO -->
+  <header id="top" class="hero">
+    <div class="hero-text">
+      <div class="kicker">
+        <span class="kicker-line"></span>
+        <span class="kicker-label"><span class="lang-pt">Sobremesas artesanais · Portugal</span><span class="lang-en">Handcrafted desserts · Portugal</span></span>
+      </div>
+      <h1>
+        <span class="lang-pt">Sobremesas asiáticas com alma portuguesa</span>
+        <span class="lang-en">Asian desserts with a Portuguese soul</span>
+      </h1>
+      <p class="hero-sub">
+        <span class="lang-pt">Mochi de gelado, cheesecakes e sobremesas de assinatura, feitos à mão em pequenos lotes para restaurantes e cafés.</span>
+        <span class="lang-en">Ice cream mochi, cheesecakes and signature desserts, handmade in small batches for restaurants and cafés.</span>
+      </p>
+      <div class="hero-actions">
+        <a href="#produtos" class="btn-dark"><span class="lang-pt">Ver produtos</span><span class="lang-en">View products</span></a>
+        <a href="#restaurantes" class="btn-underline"><span class="lang-pt">Para restaurantes</span><span class="lang-en">For restaurants</span></a>
+      </div>
     </div>
+    <div class="hero-visual">
+      <div class="hero-circle"></div>
+      <img src="assets/yuzu-panna-cotta-transparent.webp" alt="Panna cotta de yuzu" class="hero-img">
+      <div class="hero-jp" lang="ja">ポルトガルの心、アジアの味</div>
+    </div>
+  </header>
 
-    <header>
-        <nav class="container">
-            <div class="logo">
-                <img src="./AmailLogo.jpeg" alt="Amai Studio Logo" style="height: 200px;">
-            </div>
-            <div class="hamburger" onclick="toggleMenu()">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            <div class="lang-content active" data-lang="en">
-                <ul class="nav-links">
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#products">Products</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                    <li><a href="/amai-studio/second-page.html">Video</a></li>
-                </ul>
-            </div>
-            <div class="lang-content" data-lang="pt">
-                <ul class="nav-links">
-                    <li><a href="#home">Início</a></li>
-                    <li><a href="#products">Produtos</a></li>
-                    <li><a href="#contact">Contacto</a></li>
-                    <li><a href="/amai-studio/second-page.html">Vídeo</a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
-    
-    <main>
-        <section id="home" class="hero">
-            <div class="container">
-                <div class="hero-content">
-                    <h1>Amai Studio</h1>
-                    <div class="lang-content active" data-lang="en">
-                        <p class="slogan">Artisanal Mochi, Made with Love in Portugal</p>
-                        <p class="hero-description">
-                            <strong>A Story of Tradition with a Portuguese Soul</strong><br><br>
-                            Mochi has been cherished in Japan for centuries — a symbol of celebration, elegance, and
-                            craftsmanship. We bring this tradition to Portugal, where each mochi is carefully handmade
-                            with top-grade ingredients and a touch of local creativity.<br><br>
-                            Every piece is 100% handmade, with soft, delicate dough that embraces a creamy, flavorful
-                            filling. Our products are gluten-free, halal-friendly, most importantly, with options of 
-                            lactose free and vegan, making it a dessert that welcomes everyone to the table.<br><br>
-                            What makes our mochi unique is its Portuguese soul: the warmth, generosity, and innovation
-                            of our culture woven into a Japanese classic. Light, elegant, and prepared with love, it is
-                            more than a dessert — it is a moment of joy to be shared.
-                        </p>
-                    </div>
-                    <div class="lang-content" data-lang="pt">
-                        <p class="slogan">Mochi Artesanal, Feito com Amor em Portugal</p>
-                        <p class="hero-description">
-                            <strong>Uma História de Tradição com Alma Portuguesa</strong><br><br>
-                            O mochi tem sido valorizado no Japão há séculos — um símbolo de celebração, elegância e
-                            artesanato. Trazemos esta tradição para Portugal, onde cada mochi é cuidadosamente feito à
-                            mão com ingredientes de primeira qualidade e um toque de criatividade local.<br><br>
-                            Cada peça é 100% feita à mão, com massa suave e delicada que abraça um recheio cremoso e
-                            saboroso. O nosso mochi é vegan, sem glúten e halal, tornando-se uma sobremesa que acolhe
-                            todos à mesa.<br><br>
-                            O que torna o nosso mochi único é a sua alma portuguesa: o calor, generosidade e inovação da
-                            nossa cultura entrelaçados num clássico japonês. Leve, elegante e preparado com amor, é mais
-                            do que uma sobremesa — é um momento de alegria para partilhar.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
+  <!-- PRODUCT SECTIONS (rendered by script.js from products.js) -->
+  <main id="produtos"></main>
+  <noscript>
+    <p class="noscript-note">
+      Para ver o nosso catálogo completo, active o JavaScript ou contacte-nos pelo WhatsApp:
+      <a href="https://wa.me/351928346964">+351 928 346 964</a>
+    </p>
+  </noscript>
 
-        <section id="products" class="products">
-            <div class="container">
-                <div class="lang-content active" data-lang="en">
-                    <h2 class="section-title">Our Delicious Flavors</h2>
-                </div>
-                <div class="lang-content" data-lang="pt">
-                    <h2 class="section-title">Os Nossos Sabores Deliciosos</h2>
-                </div>
+  <!-- SOBRE -->
+  <section id="sobre" class="sobre">
+    <img src="assets/dango.webp" alt="Dango" class="sobre-img">
+    <div class="sobre-text">
+      <div class="kicker">
+        <span class="kicker-line"></span>
+        <span class="kicker-label"><span class="lang-pt">Sobre nós</span><span class="lang-en">About us</span></span>
+      </div>
+      <h2>
+        <span class="lang-pt">Feito à mão, em pequenos lotes</span>
+        <span class="lang-en">Handmade, in small batches</span>
+      </h2>
+      <p>
+        <span class="lang-pt">A Amai Studio nasce do encontro entre a doçaria japonesa e o gosto português. Cada mochi, cheesecake e sobremesa de assinatura é produzido artesanalmente, com ingredientes cuidadosamente escolhidos — do matcha ao yuzu, do sésamo preto ao morango dos nossos produtores.</span>
+        <span class="lang-en">Amai Studio was born where Japanese confectionery meets Portuguese taste. Every mochi, cheesecake and signature dessert is handmade with carefully chosen ingredients — from matcha to yuzu, from black sesame to strawberries from our local growers.</span>
+      </p>
+      <p>
+        <span class="lang-pt">Trabalhamos exclusivamente com restauração e comércio, para que a sua carta de sobremesas tenha algo que mais ninguém tem.</span>
+        <span class="lang-en">We work exclusively with restaurants and food businesses, so your dessert menu has something no one else has.</span>
+      </p>
+    </div>
+  </section>
 
-                <div class="products-grid">
-                    <!-- Matcha -->
-                    <div class="product-card">
-                        <img src="./Matcha-2.png" alt="Matcha Mochi" class="product-image">
-                        <div class="lang-content active" data-lang="en">
-                            <h3 class="product-name">Matcha <span class="japanese-name">まっちゃ</span></h3>
-                            <p class="product-description">
-                                Made with premium matcha powder, imported from Japan. An authentic and elegant flavor
-                                with earthy notes and natural sweetness.
-                            </p>
-                        </div>
-                        <div class="lang-content" data-lang="pt">
-                            <h3 class="product-name">Matcha <span class="japanese-name">まっちゃ</span></h3>
-                            <p class="product-description">
-                                Feito com pó de matcha premium, importado do Japão. Um sabor autêntico e elegante.
-                            </p>
-                        </div>
-                        <div class="product-tags">
-                            <span class="tag gluten-free">Gluten Free</span>
-                        </div>
-                    </div>
-
-                    <!-- Strawberry -->
-                    <div class="product-card">
-                        <img src="./Strawberry.jpg" alt="Strawberry Mochi" class="product-image">
-                        <div class="lang-content active" data-lang="en">
-                            <h3 class="product-name">Strawberry <span class="japanese-name">いちご</span></h3>
-                            <p class="product-description">
-                                Made with fresh strawberries. Naturally fruity and vibrant with a sweet, refreshing
-                                taste that captures summer in every bite.
-                            </p>
-                        </div>
-                        <div class="lang-content" data-lang="pt">
-                            <h3 class="product-name">Morango <span class="japanese-name">いちご</span></h3>
-                            <p class="product-description">
-                                Feito com morangos frescos. Recheio naturalmente frutado e vibrante.
-                            </p>
-                        </div>
-                        <div class="product-tags">
-                            <span class="tag gluten-free">Gluten Free</span>
-                        </div>
-                    </div>
-
-                    <!-- Dark Chocolate -->
-                    <div class="product-card">
-                        <img src="./Chocolate.jpg" alt="Dark Chocolate Mochi" class="product-image">
-                        <div class="lang-content active" data-lang="en">
-                            <h3 class="product-name">Dark Chocolate with Salt <span
-                                    class="japanese-name">くろチョコレート</span></h3>
-                            <p class="product-description">
-                                Made with 70% cocoa, featuring deep and sophisticated notes of bitter chocolate
-                                perfectly balanced with a hint of sea salt.
-                            </p>
-                        </div>
-                        <div class="lang-content" data-lang="pt">
-                            <h3 class="product-name">Chocolate Negro com Sal <span class="japanese-name">くろチョコレート</span>
-                            </h3>
-                            <p class="product-description">
-                                Feito com 70% de cacau, com notas profundas e sofisticadas de chocolate amargo.
-                            </p>
-                        </div>
-                        <div class="product-tags">
-                            <span class="tag gluten-free">Gluten Free</span>
-                        </div>
-                    </div>
-
-                    <!-- Coconut -->
-                    <div class="product-card">
-                        <img src="./Coconut1.png" alt="Coconut Mochi" class="product-image">
-                        <div class="lang-content active" data-lang="en">
-                            <h3 class="product-name">Coconut <span class="japanese-name">ココナッツ</span></h3>
-                            <p class="product-description">
-                                Creamy vegan option, 100% plant-based, made for those who avoid dairy products. Rich
-                                coconut flavor with tropical essence.
-                            </p>
-                        </div>
-                        <div class="lang-content" data-lang="pt">
-                            <h3 class="product-name">Coco <span class="japanese-name">ココナッツ</span></h3>
-                            <p class="product-description">
-                                Opção cremosa, 100% vegetal, feita para quem evita produtos lácteos.
-                            </p>
-                        </div>
-                        <div class="product-tags">
-                            <span class="tag vegan">Vegan</span>
-                            <span class="tag gluten-free">Gluten Free</span>
-                            <span class="tag">Lactose Free</span>
-                        </div>
-                    </div>
-
-                    <!-- Mango -->
-                    <div class="product-card">
-                        <img src="./Mango.png" alt="Mango Mochi" class="product-image">
-                        <div class="lang-content active" data-lang="en">
-                            <h3 class="product-name">Mango <span class="japanese-name">まんごー</span></h3>
-                            <p class="product-description">
-                                Made with fresh mango purée. Refreshing, light and naturally sweet with tropical
-                                sunshine flavors.
-                            </p>
-                        </div>
-                        <div class="lang-content" data-lang="pt">
-                            <h3 class="product-name">Manga <span class="japanese-name">まんごー</span></h3>
-                            <p class="product-description">
-                                Feito com puré de manga fresca. Refrescante, leve e naturalmente doce.
-                            </p>
-                        </div>
-                        <div class="product-tags">
-                            <span class="tag gluten-free">Gluten Free</span>
-                        </div>
-                    </div>
-
-                    <!-- Blueberry -->
-                    <div class="product-card">
-                        <img src="./Blueberry.jpg" alt="Blueberry Mochi (vegan)" class="product-image">
-                        <div class="lang-content active" data-lang="en">
-                            <h3 class="product-name">Blueberry <span class="japanese-name">ブルーベリ</span></h3>
-                            <p class="product-description">
-                                Our mochi is vegan, gluten-free, and halal-friendly, making it a dessert 
-                                that welcomes everyone to the table.
-
-                            </p>
-                        </div>
-                        <div class="lang-content" data-lang="pt">
-                            <h3 class="product-name">Mirtilo <span class="japanese-name">ブルーベリ</span></h3>
-                            <p class="product-description">
-                                O nosso mochi é vegan, sem glúten e halal-friendly, tornando-se numa sobremesa 
-                                que acolhe todos à mesa.
-                            </p>
-                        </div>
-                        <div class="product-tags">
-                            <span class="tag gluten-free">Gluten Free</span>
-                            <span class="tag vegan">Vegan</span>
-                            <span class="tag">Lactose Free</span>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div style="text-align: center; margin-top: 3rem;">
-                    <div class="lang-content active" data-lang="en">
-                        <p style="font-size: 2.8rem; color: #8B7355; font-style: italic;">
-                            <br>We are always creating new delicious flavors. <br>
-                            Please contact us to find out more.<br>
-                        </p>
-                    </div>
-                    <div class="lang-content" data-lang="pt">
-                        <p style="font-size: 1.2rem; color: #8B7355; font-style: italic;">
-                            Estamos sempre a criar novas delícias.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="contact" class="contact">
-            <div class="container">
-                <div class="contact-content">
-                    <div class="lang-content active" data-lang="en">
-                        <h2 class="section-title">Get in Touch</h2>
-                        <p>Ready to experience our artisanal mochi? Contact us for orders and inquiries.</p>
-                    </div>
-                    <div class="lang-content" data-lang="pt">
-                        <h2 class="section-title">Entre em Contacto</h2>
-                        <p>Pronto para experimentar o nosso mochi artesanal? Contacte-nos para encomendas e informações.
-                        </p>
-                    </div>
-
-                    <div class="contact-info">
-                        <div class="contact-item">
-                            <div class="lang-content active" data-lang="en">
-                                <h3>Email</h3>
-                            </div>
-                            <div class="lang-content" data-lang="pt">
-                                <h3>Email</h3>
-                            </div>
-                            <a href="mailto:amai.studioportugal@gmail.com">amai.studioportugal@gmail.com</a>
-                        </div>
-
-                        <div class="contact-item">
-                            <div class="lang-content active" data-lang="en">
-                            <h3>Phone</h3>
-                            </div>
-                            <div class="lang-content" data-lang="pt">
-                            <h3>Telefone</h3>
-                            </div>
-                            <a href="tel:+351931875618">
-                            <img src="whatsapp-logo.png" alt="WhatsApp logo" style="width:24px;height:24px;margin-right:5px;vertical-align:middle;">
-                            +351 931 875 618
-                            </a>
-                        </div>
-
-                        <div class="contact-item">
-                            <div class="lang-content active" data-lang="en">
-                            <h3>Follow us on Instagram</h3>
-                            </div>
-                            <div class="lang-content" data-lang="pt">
-                            <h3>Siga-nos no Instagram</h3>
-                            </div>
-                            <a href="https://www.instagram.com/amaistudio_portugal?igsh=OGV1cWY3azhqZHF1&utm_source=qr"
-                            target="_blank">
-                            <img src="instagram-logo.png" alt="Instagram logo" style="width:24px;height:24px;margin-right:5px;vertical-align:middle;">
-                            @amaistudio_portugal
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="lang-content active" data-lang="en">
-                    <p>&copy; 2024 Amai Studio. Artisanal Mochi, Made with Love in Portugal.</p>
-                </div>
-                <div class="lang-content" data-lang="pt">
-                    <p>&copy; 2024 Amai Studio. Mochi Artesanal, Feito com Amor em Portugal.</p>
-                </div>
-                <div class="social-links">
-                    <a href="https://www.instagram.com/amaistudio_portugal?igsh=OGV1cWY3azhqZHF1&utm_source=qr"
-                        target="_blank">
-                    <img src="instagram-logo.png" alt="Instagram logo" style="width:24px;height:24px;margin-right:5px;vertical-align:middle;">
-                </a>
-                    <a href="mailto:amai.studioportugal@gmail.com">✉️</a>
-                    <a href="tel:+351931875618">📞</a>
-                </div>
-            </div>
+  <!-- PARA RESTAURANTES -->
+  <section id="restaurantes" class="restaurantes">
+    <div class="restaurantes-inner">
+      <div class="restaurantes-head">
+        <span class="kicker-label green-light"><span class="lang-pt">Para restaurantes e cafés</span><span class="lang-en">For restaurants and cafés</span></span>
+        <h2>
+          <span class="lang-pt">Sobremesas prontas a servir, do congelador ao prato</span>
+          <span class="lang-en">Desserts ready to serve, from freezer to plate</span>
+        </h2>
+      </div>
+      <div class="restaurantes-grid">
+        <div class="restaurantes-cell">
+          <div class="cell-title">−18 °C</div>
+          <div class="cell-body">
+            <span class="lang-pt">Entregues congeladas, com validade mínima de 3 meses. Sem desperdício, sem preparação.</span>
+            <span class="lang-en">Delivered frozen, with a minimum shelf life of 3 months. No waste, no preparation.</span>
+          </div>
         </div>
-    </footer>
+        <div class="restaurantes-cell">
+          <div class="cell-title"><span class="lang-pt">24 sobremesas</span><span class="lang-en">24 desserts</span></div>
+          <div class="cell-body">
+            <span class="lang-pt">Mochi de gelado, opções vegan e sem glúten, cheesecakes e assinaturas exclusivas.</span>
+            <span class="lang-en">Ice cream mochi, vegan and gluten-free options, cheesecakes and exclusive signatures.</span>
+          </div>
+        </div>
+        <div class="restaurantes-cell">
+          <div class="cell-title"><span class="lang-pt">Menu incluído</span><span class="lang-en">Menu included</span></div>
+          <div class="cell-body">
+            <span class="lang-pt">Criamos o menu de sobremesas personalizado com o nome do seu restaurante e os seus preços.</span>
+            <span class="lang-en">We create a personalised dessert menu with your restaurant's name and your prices.</span>
+          </div>
+        </div>
+      </div>
+      <div class="restaurantes-cta">
+        <a href="#contacto" class="btn-light"><span class="lang-pt">Pedir catálogo 2026</span><span class="lang-en">Request the 2026 catalogue</span></a>
+      </div>
+    </div>
+  </section>
 
-   <script>
-  // Loading animation
-  window.addEventListener('load', function () {
-    const loading = document.getElementById('loading');
-    if (loading) {
-      setTimeout(() => loading.classList.add('fade-out'), 1000);
-    }
-    // Ensure content clears the actual header height after everything loads (logo, fonts)
-    setMainOffset(20);
-  });
+  <!-- CONTACTO / FOOTER -->
+  <footer id="contacto" class="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="assets/logo.svg" alt="Amai Studio" class="footer-logo">
+        <div class="footer-name">Amai Studio</div>
+        <div class="footer-tagline">Sobremesas asiáticas com alma portuguesa<br>Asian desserts with a Portuguese soul</div>
+      </div>
+      <div class="footer-contact">
+        <div class="kicker-label"><span class="lang-pt">Encomendas e informações</span><span class="lang-en">Orders and information</span></div>
+        <a href="https://wa.me/351928346964" class="footer-phone">+351 928 346 964</a>
+        <div class="footer-note"><span class="lang-pt">WhatsApp · Respondemos no próprio dia</span><span class="lang-en">WhatsApp · We reply the same day</span></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>
+        <span class="lang-pt">© Amai Studio 2026 · Catálogo B2B · Não destinado ao consumidor final</span>
+        <span class="lang-en">© Amai Studio 2026 · B2B catalogue · Not intended for final consumers</span>
+      </span>
+      <span class="footer-jp" lang="ja">スイーツ</span>
+    </div>
+  </footer>
 
-  // Dynamically set the main padding-top so content never sits under the fixed header
-  function setMainOffset(extra = 20) {
-    const headerEl = document.querySelector('header');
-    const mainEl = document.querySelector('main');
-    if (!headerEl || !mainEl) return;
-    const h = Math.ceil(headerEl.getBoundingClientRect().height);
-    // Use both a CSS variable (if your CSS uses it) and direct padding as a fallback
-    document.documentElement.style.setProperty('--header-offset', (h + extra) + 'px');
-    mainEl.style.paddingTop = (h + extra) + 'px';
-  }
-  window.addEventListener('resize', () => setMainOffset(20));
-  window.addEventListener('orientationchange', () => setMainOffset(20));
-
-  // Language switching
-  let currentLang = 'en';
-  function switchLanguage(lang) {
-    currentLang = lang;
-
-    // Update button states
-    document.querySelectorAll('.language-toggle button').forEach(btn => {
-      btn.classList.remove('active');
-    });
-    const btn = document.getElementById(lang + '-btn');
-    if (btn) btn.classList.add('active');
-
-    // Update content visibility
-    document.querySelectorAll('.lang-content').forEach(content => {
-      content.classList.remove('active');
-    });
-    document.querySelectorAll('[data-lang="' + lang + '"]').forEach(content => {
-      content.classList.add('active');
-    });
-
-    // Close any open mobile menu when switching language
-    const hamburger = document.querySelector('.hamburger');
-    const openMenu = document.querySelector('.nav-links.show');
-    if (hamburger) hamburger.classList.remove('active');
-    if (openMenu) openMenu.classList.remove('show');
-
-    // Recalculate header offset in case layout changed
-    setMainOffset(20);
-  }
-
-  // Smooth scrolling for in-page anchor links only
-  document.addEventListener('DOMContentLoaded', function () {
-    const navLinks = document.querySelectorAll('.nav-links a');
-    navLinks.forEach(link => {
-      link.addEventListener('click', function (e) {
-        const href = this.getAttribute('href') || '';
-
-        // Only intercept links that start with '#'
-        if (href.startsWith('#')) {
-          const targetSection = document.querySelector(href);
-          if (targetSection) {
-            e.preventDefault();
-            const headerEl = document.querySelector('header');
-            const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 90;
-            const targetPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - headerHeight;
-
-            window.scrollTo({ top: targetPosition, behavior: 'smooth' });
-          }
-        }
-
-        // Close mobile menu after any nav click on small screens
-        const hamburger = document.querySelector('.hamburger');
-        const activeMenu = document.querySelector('.lang-content.active .nav-links');
-        if (hamburger && activeMenu && window.innerWidth <= 768) {
-          hamburger.classList.remove('active');
-          activeMenu.classList.remove('show');
-        }
-      });
-    });
-  });
-
-  // Header background on scroll
-  window.addEventListener('scroll', function () {
-    const headerEl = document.querySelector('header');
-    if (!headerEl) return;
-    headerEl.style.background = (window.scrollY > 100)
-      ? 'rgba(255, 255, 255, 0.98)'
-      : 'rgba(255, 255, 255, 0.95)';
-  });
-
-  // Hide header on scroll down, show on scroll up
-  let lastScrollY = window.scrollY;
-  window.addEventListener('scroll', function () {
-    const headerEl = document.querySelector('header');
-    if (!headerEl) return;
-
-    const currentScrollY = window.scrollY;
-    if (currentScrollY > lastScrollY && currentScrollY > 100) {
-      headerEl.style.transform = 'translateY(-100%)';
-    } else {
-      headerEl.style.transform = 'translateY(0)';
-    }
-    lastScrollY = currentScrollY;
-  });
-
-  // Animate elements on scroll (safe if selectors don't exist)
-  function animateOnScroll() {
-    const elements = document.querySelectorAll('.product-card, .contact-item');
-    if (!elements.length) return;
-
-    elements.forEach(element => {
-      const elementTop = element.getBoundingClientRect().top;
-      const elementVisible = 150;
-      if (elementTop < window.innerHeight - elementVisible) {
-        element.style.opacity = '1';
-        element.style.transform = 'translateY(0)';
-      }
-    });
-  }
-
-  // Initialize animation styles (safe if selectors don't exist)
-  document.addEventListener('DOMContentLoaded', function () {
-    const elements = document.querySelectorAll('.product-card, .contact-item');
-    if (!elements.length) return;
-
-    elements.forEach(element => {
-      element.style.opacity = '0';
-      element.style.transform = 'translateY(30px)';
-      element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-    });
-  });
-
-  window.addEventListener('scroll', animateOnScroll);
-  animateOnScroll(); // Run once on load
-
-  // Toggle menu for mobile view
-  function toggleMenu() {
-    const hamburger = document.querySelector('.hamburger');
-    if (hamburger) hamburger.classList.toggle('active');
-
-    const activeMenu = document.querySelector('.lang-content.active .nav-links');
-    if (activeMenu) {
-      activeMenu.classList.toggle('show');
-    }
-  }
-
-  // Expose toggleMenu if it's called inline from HTML
-  window.toggleMenu = toggleMenu;
-  window.switchLanguage = switchLanguage;
-</script>
+  <script src="products.js"></script>
+  <script src="script.js"></script>
 </body>
-
 </html>
