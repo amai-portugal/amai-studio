@@ -426,11 +426,6 @@ html[data-lang="en"] .lang-pt { display: none; }
 }
 .footer-brand { display: flex; flex-direction: column; gap: 18px; }
 .footer-logo { width: 88px; height: 88px; }
-.footer-name {
-  font-family: var(--serif);
-  font-size: 24px;
-  font-weight: 500;
-}
 .footer-tagline {
   font-size: 14px;
   font-weight: 300;
