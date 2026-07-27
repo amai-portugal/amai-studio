@@ -146,7 +146,7 @@ const SECTIONS = [
     items: [
       {
         pt: 'Pudim de Sésamo Preto', en: 'Black Sesame Panna Cotta', jp: '黒ゴマパンナコッタ',
-        img: 'assets/black-sesame-panna-cotta.webp',
+        img: 'assets/n-black-sesame-panna-cotta.webp',
         descPt: 'Pudim sedoso de sésamo preto, de sabor tostado, com acabamento escuro pintalgado.',
         descEn: 'Silky black sesame pudding with a toasted flavour and a dark speckled finish.',
         tags: ['gf'],
