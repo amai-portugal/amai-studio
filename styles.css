@@ -79,12 +79,6 @@ html[data-lang="en"] .lang-pt { display: none; }
   color: var(--ink);
 }
 .nav-logo { width: 44px; height: 44px; }
-.nav-name {
-  font-family: var(--serif);
-  font-size: 19px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-}
 
 .nav-links {
   display: flex;
