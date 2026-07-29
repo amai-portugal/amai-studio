@@ -41,8 +41,8 @@ const SECTIONS = [
       {
         pt: 'Mochi de Pistácio', en: 'Pistachio Mochi', jp: 'ピスタチオもち',
         img: 'assets/n-pistachio-mochi.webp',
-        descPt: 'Gelado de pistácio com pedaços reais de pistácio, numa concha de mochi verde.',
-        descEn: 'Pistachio ice cream with real pistachio pieces, in a green mochi shell.',
+        descPt: 'Feito com pedaços de pistácio acabados de torrar e a nossa pasta de pistácio caseira.',
+        descEn: 'Made with freshly roasted pistachio pieces and our own homemade pistachio paste.',
         tags: ['gf'],
       },
       {
