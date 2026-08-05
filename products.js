@@ -200,6 +200,13 @@ const SECTIONS = [
         descEn: 'Soft white mochi shell filled with açaí and guaraná pulp. Fresh and tropical.',
         tags: ['gf'],
       },
+      {
+        pt: 'Mochi de Sakura Matcha', en: 'Sakura Matcha Mochi', jp: '桜抹茶もち',
+        img: 'assets/n-sakura-matcha-mochi.webp',
+        descPt: 'Mochi de gelado de matcha envolvido numa cobertura crocante de chocolate branco com noz.',
+        descEn: 'Matcha ice cream mochi wrapped in a crunchy white chocolate and walnut coating.',
+        tags: ['gf'],
+      },
     ],
   },
 ];
